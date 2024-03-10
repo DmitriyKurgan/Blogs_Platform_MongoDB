@@ -18,6 +18,9 @@ export const blogsRepository = {
             createdAt: new Date().toISOString(),
             isMembership: false
         }
+        if ('_id' in newBlog) {
+            delete newBlog._id;
+        }
         const result = blogsCollection.insertOne(newBlog);
         return newBlog
     },
