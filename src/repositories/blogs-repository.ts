@@ -1,5 +1,4 @@
 import {BLogType} from "../utils/types";
-import {posts} from "./posts-repository";
 export const blogs = [] as BLogType[]
 export const blogsRepository = {
 
@@ -14,7 +13,7 @@ export const blogsRepository = {
             description: body.description,
             websiteUrl: body.websiteUrl,
             createdAt: new Date().toISOString(),
-           // isMembership: true
+            isMembership: false
         }
         return newBlog
     },
