@@ -21,8 +21,8 @@ export const blogsRepository = {
         if ('_id' in newBlog) {
             delete newBlog._id;
         }
-        const result = await blogsCollection.insertOne(newBlog, { bypassDocumentValidation: true });
-        return newBlog
+        const result = await blogsCollection.insertOne(newBlog, { forceServerObjectId: false });
+        return newBlog;
     },
     async updateBlog(blogID:string, body:BLogType) {
         const result = await blogsCollection.updateOne({id:blogID},
