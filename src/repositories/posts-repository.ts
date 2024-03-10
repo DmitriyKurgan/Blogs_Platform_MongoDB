@@ -1,15 +1,15 @@
 import {PostType} from "../utils/types";
 import {client} from "./db";
 export const posts = [] as PostType[]
+
+const postsCollection =  client.db('learning').collection<PostType>('blogs')
 export const postsRepository = {
-    async findPostByID(postID:string) {
-        //return  posts.find(post => post.id === postID);
-        return client.db('learning').collection('blogs').find({postID:{$regex:postID}}).toArray()
+    async findPostByID(postID:string):Promise<PostType | null> {
+        return await postsCollection.findOne({id:postID});
     },
-    createPost(body:PostType, blogName:string):PostType {
-        const id = new Date().getTime().toString();
+   async createPost(body:PostType, blogName:string):Promise<PostType> {
         const newPost:PostType = {
-            id,
+            id:new Date().getTime().toString(),
             title: body.title,
             shortDescription: body.shortDescription,
             content: body.content,
@@ -17,29 +17,26 @@ export const postsRepository = {
             blogName,
             createdAt: new Date().toISOString()
         }
-        return newPost
-    },
-    updatePost(postID:string, body:PostType):boolean {
-        const postByID = posts.find(post => post.id === postID);
-        if (postByID) {
-            postByID.title = body.title ?? postByID.title;
-            postByID.shortDescription = body.shortDescription ?? postByID.shortDescription;
-            postByID.content = body.content ?? postByID.content;
-            postByID.blogId = body.blogId ?? postByID.blogId;
-            return true;
-        } else {
-            return false;
-        }
-    },
-    deletePost(postID:string){
-        const postIndexToDelete = posts.findIndex(post => post.id === postID);
-        if (postIndexToDelete !== -1){
-            posts.splice(postIndexToDelete, 1);
-            return true
-        } else {
-            return false
-        }
 
+       const result = await postsCollection.insertOne(newPost)
+       return newPost
+
+    },
+   async updatePost(postID:string, body:PostType): Promise<boolean> {
+        const result = await postsCollection.updateOne({id:postID},
+            {$set: {
+                    title: body.title,
+                    shortDescription: body.shortDescription,
+                    content: body.content,
+                    blogId: body.blogId
+                }});
+       return result.matchedCount === 1
+    },
+   async deletePost(postID:string){
+
+        const result = await postsCollection.deleteOne({id:postID})
+
+       return result.deletedCount === 1
     }
 
 }

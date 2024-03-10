@@ -1,41 +1,37 @@
-import {BLogType} from "../utils/types";
+import {BLogType, PostType} from "../utils/types";
+import {client} from "./db";
 export const blogs = [] as BLogType[]
+
+const blogsCollection =  client.db('learning').collection<BLogType>('blogs')
 export const blogsRepository = {
 
-   async findBlogByID(blogID:string) {
-        return blogs.find(blog => blog.id === blogID);
+   async findBlogByID(blogID:string):Promise<BLogType | null> {
+        return await blogsCollection.findOne({id:blogID});
     },
     async createBlog(body:BLogType) {
-        const id = new Date().getTime().toString();
         const newBlog:BLogType = {
-            id,
+            id:new Date().getTime().toString(),
             name: body.name,
             description: body.description,
             websiteUrl: body.websiteUrl,
             createdAt: new Date().toISOString(),
             isMembership: false
         }
+        const result = blogsCollection.insertOne(newBlog);
         return newBlog
     },
     async updateBlog(blogID:string, body:BLogType) {
-        const blogByID = blogs.find(blog => blog.id === blogID);
-        if (blogByID) {
-            blogByID.name = body.name ?? blogByID.name;
-            blogByID.description = body.description ?? blogByID.description;
-            blogByID.websiteUrl = body.websiteUrl ?? blogByID.websiteUrl;
-            return true;
-        } else {
-            return false;
-        }
+        const result = await blogsCollection.updateOne({id:blogID},
+            {name: body.name,
+            description: body.description,
+            websiteUrl: body.websiteUrl
+            });
+
+        return result.matchedCount === 1;
     },
-   async deleteBlog(blogID:string){
-        const blogIndexToDelete = blogs.findIndex(blog => blog.id === blogID);
-        if (blogIndexToDelete !== -1){
-            blogs.splice(blogIndexToDelete, 1);
-            return true
-        } else {
-            return false
-        }
+   async deleteBlog(blogID:string): Promise<boolean>{
+        const result = await blogsCollection.deleteOne({id:blogID});
+        return result.deletedCount === 1
     }
 
 }
