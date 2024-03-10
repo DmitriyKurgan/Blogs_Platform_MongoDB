@@ -17,9 +17,9 @@ postsRouter.get('/', (req: Request, res: Response) => {
     res.send(posts).status(CodeResponsesEnum.OK_200)
 });
 
-postsRouter.get('/:id', (req:Request, res: Response) => {
+postsRouter.get('/:id', async (req:Request, res: Response) => {
     const postID = req.params.id;
-    const postByID = postsRepository.findPostByID(postID);
+    const postByID = await postsRepository.findPostByID(postID);
     if (!postID || !postByID){
         res.sendStatus(CodeResponsesEnum.Not_found_404);
         return
@@ -27,22 +27,22 @@ postsRouter.get('/:id', (req:Request, res: Response) => {
     res.status(CodeResponsesEnum.OK_200).send(postByID);
 })
 
-postsRouter.post('/', validateAuthorization, validatePostsRequests,validationPostsCreation, validateErrorsMiddleware, (req: Request, res: Response) => {
+postsRouter.post('/', validateAuthorization, validatePostsRequests,validationPostsCreation, validateErrorsMiddleware, async (req: Request, res: Response) => {
     const blog = blogs.find(b=>b.id === req.body.blogId)
     if (!blog){
         return res.sendStatus(CodeResponsesEnum.Not_found_404);
     }
-    const newPost:PostType = postsRepository.createPost(req.body, blog.name);
+    const newPost:PostType = await postsRepository.createPost(req.body, blog.name);
     posts.push(newPost);
     res.status(CodeResponsesEnum.Created_201).send(newPost);
 });
 
-postsRouter.put('/:id', validateAuthorization, validatePostsRequests,validationPostsCreation,validateErrorsMiddleware, (req:Request, res: Response)=>{
+postsRouter.put('/:id', validateAuthorization, validatePostsRequests,validationPostsCreation,validateErrorsMiddleware, async (req:Request, res: Response)=>{
     const postID = req.params.id;
-    const isUpdated = postsRepository.updatePost(postID, req.body);
+    const isUpdated = await postsRepository.updatePost(postID, req.body);
 
     if (isUpdated){
-        const postByID = postsRepository.findPostByID(postID);
+        const postByID = await postsRepository.findPostByID(postID);
         res.status(CodeResponsesEnum.Not_content_204).send(postByID);
     } else {
         res.sendStatus(CodeResponsesEnum.Not_found_404);
@@ -50,9 +50,9 @@ postsRouter.put('/:id', validateAuthorization, validatePostsRequests,validationP
     }
 });
 
-postsRouter.delete('/:id', validateAuthorization, (req:Request, res:Response)=>{
+postsRouter.delete('/:id', validateAuthorization, async (req:Request, res:Response)=>{
     const postID = req.params.id;
-    const isDeleted = postsRepository.deletePost(postID);
+    const isDeleted = await postsRepository.deletePost(postID);
 
     if (!postID || !isDeleted){
         res.sendStatus(404);

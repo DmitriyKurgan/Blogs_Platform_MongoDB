@@ -2,8 +2,8 @@ import {PostType} from "../utils/types";
 export const posts = [] as PostType[]
 export const postsRepository = {
 
-    findPostByID(postID:string) {
-        return posts.find(post => post.id === postID);
+    async findPostByID(postID:string) {
+        return await posts.find(post => post.id === postID);
     },
     createPost(body:PostType, blogName:string):PostType {
         const id = new Date().getTime().toString();
@@ -13,7 +13,8 @@ export const postsRepository = {
             shortDescription: body.shortDescription,
             content: body.content,
             blogId: body.blogId,
-            blogName
+            blogName,
+            createdAt: body.createdAt
         }
         return newPost
     },
