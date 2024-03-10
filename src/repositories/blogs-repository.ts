@@ -7,11 +7,11 @@ export const blogsRepository = {
 
    async findBlogByID(blogID:string):Promise<BLogType | null> {
 
-        return await blogsCollection.findOne({id:blogID});
+        return await blogsCollection.findOne({_id:blogID});
     },
     async createBlog(body:BLogType) {
         const newBlog:BLogType = {
-            id:new Date().getTime().toString(),
+            _id:new Date().getTime().toString(),
             name: body.name,
             description: body.description,
             websiteUrl: body.websiteUrl,
@@ -19,10 +19,11 @@ export const blogsRepository = {
             isMembership: false
         }
         const result = blogsCollection.insertOne(newBlog);
+
         return newBlog
     },
     async updateBlog(blogID:string, body:BLogType) {
-        const result = await blogsCollection.updateOne({id:blogID},
+        const result = await blogsCollection.updateOne({_id:blogID},
             {name: body.name,
             description: body.description,
             websiteUrl: body.websiteUrl
@@ -31,7 +32,7 @@ export const blogsRepository = {
         return result.matchedCount === 1;
     },
    async deleteBlog(blogID:string): Promise<boolean>{
-        const result = await blogsCollection.deleteOne({id:blogID});
+        const result = await blogsCollection.deleteOne({_id:blogID});
         return result.deletedCount === 1
     }
 
