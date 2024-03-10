@@ -20,9 +20,9 @@ export const blogsRepository = {
 
    async findBlogByID(blogID:string):Promise<OutputBlogType | null> {
        const blog: WithId<BLogType> | null = await blogsCollection.findOne({_id: new ObjectId(blogID)});
-       return  blog ? BLogMapper(blog) : null
+       return blog ? BLogMapper(blog) : null
     },
-    async createBlog(body:BLogType) {
+    async createBlog(body:BLogType):Promise<OutputBlogType | null> {
         const newBlog:BLogType = {
             name: body.name,
             description: body.description,
@@ -30,10 +30,11 @@ export const blogsRepository = {
             createdAt: new Date().toISOString(),
             isMembership: false
         }
-        const result = await blogsCollection.insertOne(newBlog);
-        return newBlog;
+        const result:any = await blogsCollection.insertOne(newBlog);
+        const blog = await blogsCollection.findOne({_id: result.insertedId});
+        return blog ? BLogMapper(blog) : null;
     },
-    async updateBlog(blogID:string, body:BLogType) {
+    async updateBlog(blogID:string, body:BLogType):Promise<boolean> {
 
         const result = await blogsCollection.updateOne({_id: new ObjectId(blogID)},
             {name: body.name,
