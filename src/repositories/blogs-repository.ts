@@ -14,7 +14,7 @@ export const blogsRepository = {
             description: body.description,
             websiteUrl: body.websiteUrl,
             createdAt: new Date().toISOString(),
-            isMembership: true
+           // isMembership: true
         }
         return newBlog
     },
