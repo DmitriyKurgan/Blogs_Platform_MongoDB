@@ -128,10 +128,7 @@ export const validateErrorsMiddleware = (
     };
 
     const result = validationResult(req).formatWith(errorFormatter);
-
     const idFinder = result.array().find((e) => e.field === "id");
-   // debugger
-   //  const isBlogExist = blogs.find(b =>b.id === req.body.blogId)
     const deviceIdFinder = result.array().find((e) => e.field === "deviceId");
 
     if (idFinder || deviceIdFinder) {

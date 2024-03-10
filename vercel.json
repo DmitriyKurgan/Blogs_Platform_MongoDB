@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "name": "blogs_platform_app",
+  "name": "blogs_platform_mongoDB",
   "builds": [
     { "src": "src/index.ts", "use": "@vercel/node" }
   ],
