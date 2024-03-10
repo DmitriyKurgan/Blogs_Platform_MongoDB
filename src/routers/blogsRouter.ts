@@ -22,8 +22,10 @@ blogsRouter.get('/:id', async (req:Request, res: Response) => {
 
 blogsRouter.post('/', validateAuthorization, validateBlogsRequests, validateErrorsMiddleware, async (req:Request, res: Response) => {
     const newBlog = await blogsRepository.createBlog(req.body)
-    blogs.push(newBlog)
-    res.status(CodeResponsesEnum.Created_201).send(newBlog)
+   if (newBlog){
+       blogs.push(newBlog)
+       res.status(CodeResponsesEnum.Created_201).send(newBlog)
+   }
 });
 
 blogsRouter.put('/:id', validateAuthorization, validateBlogsRequests, validateErrorsMiddleware, async (req:Request, res:Response) => {
