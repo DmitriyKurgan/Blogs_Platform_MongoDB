@@ -1,9 +1,10 @@
 import {PostType} from "../utils/types";
+import {client} from "./db";
 export const posts = [] as PostType[]
 export const postsRepository = {
-
     async findPostByID(postID:string) {
-        return await posts.find(post => post.id === postID);
+        //return  posts.find(post => post.id === postID);
+        return client.db('learning').collection('blogs').find({postID:{$regex:postID}}).toArray()
     },
     createPost(body:PostType, blogName:string):PostType {
         const id = new Date().getTime().toString();
