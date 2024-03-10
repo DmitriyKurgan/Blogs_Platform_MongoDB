@@ -6,11 +6,11 @@ const blogsCollection =  client.db('learning').collection<BLogType>('blogs')
 export const blogsRepository = {
 
    async findBlogByID(blogID:string):Promise<BLogType | null> {
-        return await blogsCollection.findOne({id:blogID});
+        return await blogsCollection.findOne({_id:blogID});
     },
     async createBlog(body:BLogType) {
         const newBlog:BLogType = {
-            id:new Date().getTime().toString(),
+          //  id:new Date().getTime().toString(),
             name: body.name,
             description: body.description,
             websiteUrl: body.websiteUrl,
