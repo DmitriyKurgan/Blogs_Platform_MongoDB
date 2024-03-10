@@ -4,7 +4,7 @@ export type BLogType = {
     description: string
     websiteUrl: string
     createdAt: Date | string
-  //  isMembership:boolean
+    isMembership:boolean
 }
 
 export type PostType = {
