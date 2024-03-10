@@ -6,11 +6,10 @@ const blogsCollection =  client.db('learning').collection<BLogType>('blogs')
 export const blogsRepository = {
 
    async findBlogByID(blogID:string):Promise<BLogType | null> {
-       const blog = await blogsCollection.findOne({_id:blogID});
+       const blog: BLogType | null = await blogsCollection.findOne({_id:blogID});
        if (blog && blog._id) {
            blog.id = blog._id;
-           // @ts-ignore
-           delete blog._id;
+           delete blog['_id'];
        }
         return blog
     },
