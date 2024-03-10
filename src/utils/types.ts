@@ -1,5 +1,6 @@
 export type BLogType = {
-    id: string
+    id?: string
+    _id?: string
     name: string
     description: string
     websiteUrl: string

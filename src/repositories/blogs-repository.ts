@@ -11,17 +11,17 @@ export const blogsRepository = {
     },
     async createBlog(body:BLogType) {
         const newBlog:BLogType = {
-            id:new Date().getTime().toString(),
             name: body.name,
             description: body.description,
             websiteUrl: body.websiteUrl,
             createdAt: new Date().toISOString(),
             isMembership: false
         }
-        if ('_id' in newBlog) {
-            delete newBlog._id;
+        const result = await blogsCollection.insertOne(newBlog);
+        if (newBlog['_id']) {
+            newBlog.id = newBlog['_id'];
+            delete newBlog['_id'];
         }
-        const result = await blogsCollection.insertOne(newBlog, { forceServerObjectId: false });
         return newBlog;
     },
     async updateBlog(blogID:string, body:BLogType) {
