@@ -37,10 +37,11 @@ export const blogsRepository = {
     async updateBlog(blogID:string, body:BLogType):Promise<boolean> {
 
         const result = await blogsCollection.updateOne({_id: new ObjectId(blogID)},
-            {name: body.name,
+            {$set:{name: body.name,
             description: body.description,
             websiteUrl: body.websiteUrl
-            });
+            }}
+        );
 
         return result.matchedCount === 1;
     },

@@ -7,7 +7,7 @@ import {
 } from "../middlewares/middlewares";
 import {CodeResponsesEnum} from "../utils/utils";
 import {posts, postsRepository} from "../repositories/posts-repository";
-import {PostType} from "../utils/types";
+import {BLogType, OutputBlogType, PostType} from "../utils/types";
 import {blogs, blogsRepository} from "../repositories/blogs-repository";
 
 export const postsRouter = Router({})
@@ -28,7 +28,7 @@ postsRouter.get('/:id', async (req:Request, res: Response) => {
 })
 
 postsRouter.post('/', validateAuthorization, validatePostsRequests,validationPostsCreation, validateErrorsMiddleware, async (req: Request, res: Response) => {
-    const blog = blogs.find(b=>b.id === req.body.blogId)
+    const blog: any | undefined = blogs.find((b:any)=>b.id === req.body.blogId)
     if (!blog){
         return res.sendStatus(CodeResponsesEnum.Not_found_404);
     }
