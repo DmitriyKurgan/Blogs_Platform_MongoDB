@@ -9,7 +9,6 @@ export type BLogType = {
 export type OutputBlogType = BLogType & {id:string}
 
 export type PostType = {
-    id: string
     title: string
     shortDescription: string
     content: string
@@ -17,3 +16,5 @@ export type PostType = {
     blogName:string
     createdAt: Date | string
 }
+
+export type OutputPostType = PostType & {id:string}

@@ -30,7 +30,6 @@ blogsRouter.post('/', validateAuthorization, validateBlogsRequests, validateErro
 
 blogsRouter.put('/:id', validateAuthorization, validateBlogsRequests, validateErrorsMiddleware, async (req:Request, res:Response) => {
     const blogID = req.params.id;
-    debugger
     const isUpdated = await blogsRepository.updateBlog(blogID, req.body);
 
     if (isUpdated){

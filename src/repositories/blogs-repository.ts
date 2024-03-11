@@ -14,7 +14,6 @@ export const BLogMapper = (blog : WithId<BLogType>) : OutputBlogType => {
     }
 }
 
-
 const blogsCollection =  client.db('learning').collection<BLogType>('blogs')
 export const blogsRepository = {
 

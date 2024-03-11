@@ -28,11 +28,14 @@ postsRouter.get('/:id', async (req:Request, res: Response) => {
 })
 
 postsRouter.post('/', validateAuthorization, validatePostsRequests,validationPostsCreation, validateErrorsMiddleware, async (req: Request, res: Response) => {
-    const blog: any | undefined = blogs.find((b:any)=>b.id === req.body.blogId)
+    const blog: OutputBlogType | null = await blogsRepository.findBlogByID(req.body.blogId)
     if (!blog){
         return res.sendStatus(CodeResponsesEnum.Not_found_404);
     }
-    const newPost:PostType = await postsRepository.createPost(req.body, blog.name);
+    const newPost:PostType | null = await postsRepository.createPost(req.body, blog.name);
+    if (!newPost) {
+        return
+    }
     posts.push(newPost);
     res.status(CodeResponsesEnum.Created_201).send(newPost);
 });
